@@ -1,0 +1,132 @@
+warning: in the working copy of 'controllers/DashboardController.php', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/controllers/DashboardController.php b/controllers/DashboardController.php[m
+[1mindex 4631b42..66c430b 100644[m
+[1m--- a/controllers/DashboardController.php[m
+[1m+++ b/controllers/DashboardController.php[m
+[36m@@ -35,4 +35,126 @@[m [mclass DashboardController extends Controller {[m
+ [m
+         $this->render('dashboard/index', $data);[m
+     }[m
+[32m+[m
+[32m+[m[32m    // ============================================================[m
+[32m+[m[32m    // PAINEL ADMINISTRATIVO — admin()[m
+[32m+[m[32m    // Migrado de admin_home.php (raiz antiga do projeto)[m
+[32m+[m[32m    // ============================================================[m
+[32m+[m[32m    public function admin(): void {[m
+[32m+[m[32m        Auth::requireLogin();[m
+[32m+[m[32m        $user   = Auth::user();[m
+[32m+[m[32m        $perfil = $user['perfil'];[m
+[32m+[m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        // INDICADORES[m
+[32m+[m[32m        // Substituir null pelos resultados das consultas SQL quando[m
+[32m+[m[32m        // os módulos dos outros integrantes estiverem integrados.[m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        $indicadores = [[m
+[32m+[m[32m            'total_produtos' => null,  // Módulo de produtos[m
+[32m+[m[32m            'alimentos'      => null,  // Módulo de produtos (categoria)[m
+[32m+[m[32m            'brinquedos'     => null,  // Módulo de produtos (categoria)[m
+[32m+[m[32m            'roupas'         => null,  // Módulo de produtos (categoria)[m
+[32m+[m[32m            'higiene'        => null,  // Módulo de produtos (categoria)[m
+[32m+[m[32m            'total_turmas'   => null,  // Módulo de turmas[m
+[32m+[m[32m            'total_lotes'    => null,  // Módulo de estoque[m
+[32m+[m[32m            'estoque_atual'  => null,  // Módulo de estoque[m
+[32m+[m[32m        ];[m
+[32m+[m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        // CARDS — título, chave e cor de acento[m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        $cards = [[m
+[32m+[m[32m            ['titulo' => 'Total de Produtos', 'chave' => 'total_produtos', 'acento' => '#c0392b'],[m
+[32m+[m[32m            ['titulo' => 'Alimentos',         'chave' => 'alimentos',      'acento' => '#27ae60'],[m
+[32m+[m[32m            ['titulo' => 'Brinquedos',        'chave' => 'brinquedos',     'acento' => '#2980b9'],[m
+[32m+[m[32m            ['titulo' => 'Roupas',            'chave' => 'roupas',         'acento' => '#8e44ad'],[m
+[32m+[m[32m            ['titulo' => 'Higiene',           'chave' => 'higiene',        'acento' => '#e67e22'],[m
+[32m+[m[32m            ['titulo' => 'Turmas',            'chave' => 'total_turmas',   'acento' => '#16a085'],[m
+[32m+[m[32m            ['titulo' => 'Lotes',             'chave' => 'total_lotes',    'acento' => '#7f8c8d'],[m
+[32m+[m[32m            ['titulo' => 'Estoque Atual',     'chave' => 'estoque_atual',  'acento' => '#c0392b'],[m
+[32m+[m[32m        ];[m
+[32m+[m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        // GRÁFICO — Arrecadação por Categoria[m
+[32m+[m[32m        // Formato esperado: ['Categoria' => quantidade, ...][m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        $grafico_categorias = [];[m
+[32m+[m
+[32m+[m[32m        $cores_categorias = [[m
+[32m+[m[32m            'Alimentos'  => '#27ae60',[m
+[32m+[m[32m            'Brinquedos' => '#2980b9',[m
+[32m+[m[32m            'Roupas'     => '#8e44ad',[m
+[32m+[m[32m            'Higiene'    => '#e67e22',[m
+[32m+[m[32m            'Outros'     => '#7f8c8d',[m
+[32m+[m[32m        ];[m
+[32m+[m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        // GRÁFICO — Arrecadação por Turma[m
+[32m+[m[32m        // Formato esperado: ['Turma' => pontos, ...][m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        $grafico_turmas = [];[m
+[32m+[m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        // RANKING DAS TURMAS[m
+[32m+[m[32m        // Formato esperado: [['posicao'=>1,'turma'=>'3ºA','pontos'=>0,'doacoes'=>0], ...][m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        $ranking_turmas = [];[m
+[32m+[m
+[32m+[m[32m        // Classes CSS para o pódio (1º, 2º, 3º lugar)[m
+[32m+[m[32m        $classes_podio = [1 => 'rank-ouro', 2 => 'rank-prata', 3 => 'rank-bronze'];[m
+[32m+[m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        // ALERTAS E PENDÊNCIAS[m
+[32m+[m[32m        // Formato esperado: [['tipo'=>'vencimento','mensagem'=>'...'], ...][m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        $alertas = [];[m
+[32m+[m
+[32m+[m[32m        $simbolos_alerta = [[m
+[32m+[m[32m            'vencimento' => '!',[m
+[32m+[m[32m            'pendencia'  => '!',[m
+[32m+[m[32m            'aviso'      => 'i',[m
+[32m+[m[32m        ];[m
+[32m+[m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        // RELATÓRIOS[m
+[32m+[m[32m        // 'ativo' => false = em desenvolvimento (desabilitado visualmente)[m
+[32m+[m[32m        // ------------------------------------------------------------[m
+[32m+[m[32m        $relatorios = [[m
+[32m+[m[32m            ['titulo' => 'Estoque',   'descricao' => 'Produtos em estoque',              'href' => '?route=reports',        'ativo' => false],[m
+[32m+[m[32m            ['titulo' => 'Doações',   'descricao' => 'Resumo das doações',               'href' => '?route=reports',        'ativo' => false],[m
+[32m+[m[32m            ['titulo' => 'Produtos',  'descricao' => 'Produtos arrecadados',             'href' => '?route=reports',        'ativo' => false],[m
+[32m+[m[32m            ['titulo' => 'Por Turma', 'descricao' => 'Desempenho de cada turma',        'href' => '?route=reports',        'ativo' => false],[m
+[32m+[m[32m            ['titulo' => 'Validade',  'descricao' => 'Produtos próximos ao vencimento', 'href' => '?route=reports',        'ativo' => false],[m
+[32m+[m[32m            ['titulo' => 'Pontuação', 'descricao' => 'Classificação das turmas',        'href' => '?route=classes/points', 'ativo' => false],[m
+[32m+[m[32m            ['titulo' => 'Rifas',     'descricao' => 'Controle de rifas',               'href' => '?route=rifas',          'ativo' => false],[m
+[32m+[m[32m        ];[m
+[32m+[m
+[32m+[m[32m        // Função auxiliar: formata valor do indicador ou retorna "—"[m
+[32m+[m[32m        if (!function_exists('formato_indicador')) {[m
+[32m+[m[32m            function formato_indicador($valor) {[m
+[32m+[m[32m                if ($valor === null) {[m
+[32m+[m[32m                    return '<span class="admin-card-vazio">&#8212;</span>';[m
+[32m+[m[32m                }[m
+[32m+[m[32m                return '<span class="admin-card-numero">' . number_format((int)$valor, 0, ',', '.') . '</span>';[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        $data = [[m
+[32m+[m[32m            'user'               => $user,[m
+[32m+[m[32m            'perfil'             => $perfil,[m
+[32m+[m[32m            'indicadores'        => $indicadores,[m
+[32m+[m[32m            'cards'              => $cards,[m
+[32m+[m[32m            'grafico_categorias' => $grafico_categorias,[m
+[32m+[m[32m            'cores_categorias'   => $cores_categorias,[m
+[32m+[m[32m            'grafico_turmas'     => $grafico_turmas,[m
+[32m+[m[32m            'ranking_turmas'     => $ranking_turmas,[m
+[32m+[m[32m            'classes_podio'      => $classes_podio,[m
+[32m+[m[32m            'alertas'            => $alertas,[m
+[32m+[m[32m            'simbolos_alerta'    => $simbolos_alerta,[m
+[32m+[m[32m            'relatorios'         => $relatorios,[m
+[32m+[m[32m        ];[m
+[32m+[m
+[32m+[m[32m        $this->render('dashboard/admin', $data);[m
+[32m+[m[32m    }[m
+ }[m

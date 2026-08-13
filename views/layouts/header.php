@@ -30,6 +30,10 @@ $perfil = Auth::getPerfil();
                 <li><a href="/financeiro" class="nav-link">Financeiro</a></li>
                 <li><a href="/relatorios" class="nav-link">Relatórios</a></li>
             <?php endif; ?>
+
+            <?php if (in_array($perfil, ['admin', 'subadmin'], true)): ?>
+                <li><a href="?route=admin" class="nav-link" style="color: var(--color-warning);">⚙ Admin</a></li>
+            <?php endif; ?>
         </ul>
 
         <div class="user-badge">
