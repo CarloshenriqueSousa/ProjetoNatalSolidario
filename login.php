@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 session_start();
 require 'conexao.php';
@@ -104,6 +105,8 @@ $conexao->close();
 </body>
 </html>
 =======
+=======
+>>>>>>> parent of fef2cb1 (Refatorização do projeto)
 <?php
 session_start();
 require 'conexao.php';
@@ -208,4 +211,7 @@ $conexao->close();
 
 </body>
 </html>
+<<<<<<< HEAD
+>>>>>>> parent of fef2cb1 (Refatorização do projeto)
+=======
 >>>>>>> parent of fef2cb1 (Refatorização do projeto)
