@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 # 🎄 Natal Solidário - Sistema de Gerenciamento
 
 Sistema web completo para gerenciamento de arrecadação de doações, estoque, turmas, rifas, prestação de contas, famílias beneficiárias, finanças e ranking do **Natal Solidário**.
@@ -123,6 +124,8 @@ Projeto desenvolvido para o evento **Natal Solidário**. Todos os direitos reser
 =======
 =======
 >>>>>>> parent of fef2cb1 (Refatorização do projeto)
+=======
+>>>>>>> parent of fef2cb1 (Refatorização do projeto)
 Antes de Utilizar execute no MySQL
 
 CREATE DATABASE natal_solidario_jmf;
@@ -188,6 +191,9 @@ Adicionar um guia passo a passo acima do formulário
 Explicar claramente as etapas após o registro
 Destacar os canais de contato (WhatsApp, telefone)
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of fef2cb1 (Refatorização do projeto)
+=======
 >>>>>>> parent of fef2cb1 (Refatorização do projeto)
 =======
 >>>>>>> parent of fef2cb1 (Refatorização do projeto)

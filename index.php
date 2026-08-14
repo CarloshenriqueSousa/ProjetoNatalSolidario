@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 /**
  * Natal Solidário — Index Router Entrypoint
@@ -160,6 +161,8 @@ if (array_key_exists($route, $routes)) {
 =======
 =======
 >>>>>>> parent of fef2cb1 (Refatorização do projeto)
+=======
+>>>>>>> parent of fef2cb1 (Refatorização do projeto)
 <?php
 session_start();
 require 'conexao.php';
@@ -232,6 +235,10 @@ $conexao->close();
     </div>
 </body>
 <<<<<<< HEAD
+<<<<<<< HEAD
+</html>
+>>>>>>> parent of fef2cb1 (Refatorização do projeto)
+=======
 </html>
 >>>>>>> parent of fef2cb1 (Refatorização do projeto)
 =======
