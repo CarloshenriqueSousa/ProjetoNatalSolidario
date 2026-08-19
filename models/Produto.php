@@ -89,4 +89,101 @@ class Produto {
             return false;
         }
     }
+
+    /**
+     * Retorna o total de produtos agrupados por categoria
+     * Usado pelo Dashboard para gráfico de distribuição
+     */
+    public static function getResumoPorCategoria(?int $turmaId = null): array {
+        $db = Database::getInstance();
+
+        $cond = '';
+        $params = [];
+        if ($turmaId !== null) {
+            $cond = ' WHERE lp.turma_id = :tid';
+            $params[':tid'] = $turmaId;
+        }
+
+        $sql = "
+            SELECT 
+                lp.categoria,
+                COUNT(lp.id) AS total_lotes,
+                COALESCE(SUM(
+                    CASE lp.categoria
+                        WHEN 'roupa' THEN pr.quantidade
+                        WHEN 'brinquedo' THEN pb.quantidade
+                        WHEN 'alimento' THEN pa.quantidade
+                        WHEN 'higiene' THEN ph.quantidade
+                        ELSE 0
+                    END
+                ), 0) AS total_quantidade
+            FROM lotes_produtos lp
+            LEFT JOIN produtos_roupas pr ON pr.lote_id = lp.id
+            LEFT JOIN produtos_brinquedos pb ON pb.lote_id = lp.id
+            LEFT JOIN produtos_alimentos pa ON pa.lote_id = lp.id
+            LEFT JOIN produtos_higiene ph ON ph.lote_id = lp.id
+            {$cond}
+            GROUP BY lp.categoria
+            ORDER BY total_quantidade DESC
+        ";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Retorna a evolução temporal de doações (agrupado por dia)
+     * Usado pelo Dashboard para gráfico de evolução
+     */
+    public static function getEvolucaoDoacoes(int $dias = 30, ?int $turmaId = null): array {
+        $db = Database::getInstance();
+
+        $cond = '';
+        $params = [':dias' => $dias];
+        if ($turmaId !== null) {
+            $cond = ' AND lp.turma_id = :tid';
+            $params[':tid'] = $turmaId;
+        }
+
+        $sql = "
+            SELECT 
+                DATE(lp.criado_em) AS data_registro,
+                COUNT(lp.id) AS total_lotes,
+                COALESCE(SUM(
+                    CASE lp.categoria
+                        WHEN 'roupa' THEN pr.quantidade
+                        WHEN 'brinquedo' THEN pb.quantidade
+                        WHEN 'alimento' THEN pa.quantidade
+                        WHEN 'higiene' THEN ph.quantidade
+                        ELSE 0
+                    END
+                ), 0) AS total_itens
+            FROM lotes_produtos lp
+            LEFT JOIN produtos_roupas pr ON pr.lote_id = lp.id
+            LEFT JOIN produtos_brinquedos pb ON pb.lote_id = lp.id
+            LEFT JOIN produtos_alimentos pa ON pa.lote_id = lp.id
+            LEFT JOIN produtos_higiene ph ON ph.lote_id = lp.id
+            WHERE lp.criado_em >= DATE_SUB(CURDATE(), INTERVAL :dias DAY)
+            {$cond}
+            GROUP BY DATE(lp.criado_em)
+            ORDER BY data_registro ASC
+        ";
+
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Retorna detalhes de um lote específico (para validação de propriedade/RBAC)
+     */
+    public static function getDetalhesLote(int $loteId): ?array {
+        $db = Database::getInstance();
+        $stmt = $db->prepare("SELECT * FROM lotes_produtos WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => $loteId]);
+        $res = $stmt->fetch();
+        return $res ?: null;
+    }
 }
+

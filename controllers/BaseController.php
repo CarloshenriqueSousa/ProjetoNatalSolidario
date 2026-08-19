@@ -1,122 +1,83 @@
 <?php
 /**
- * BaseController — Natal Solidário
- * Classe base única para TODOS os Controllers do sistema.
- *
- * Responsabilidades:
- *  - Renderizar views dentro do layout includes/header + includes/footer
- *  - Verificar autenticação e permissões usando Auth e helpers
- *  - Validar CSRF em requisições POST
- *  - Enviar respostas JSON para APIs internas
+ * Base Controller providing view rendering, session checks, and CSRF validations
  */
-abstract class BaseController
-{
-    // ─── Renderização de Views ────────────────────────────────────────────
-
+abstract class BaseController {
+    
     /**
-     * Renderiza uma view dentro do layout padrão do sistema.
-     *
-     * Views "isoladas" (ex: login) não carregam o header/footer padrão.
-     * Todas as outras são envolvidas pelo includes/header.php e includes/footer.php.
-     *
-     * @param string $view   Caminho relativo dentro de views/, sem .php
-     *                       Ex: 'dashboard/index', 'products/create'
-     * @param array  $data   Variáveis disponíveis na view (extract)
+     * Renders a view template inside the global header/footer structure
      */
-    protected function render(string $view, array $data = []): void
-    {
-        // Extrai todas as variáveis para o escopo da view
-        extract($data, EXTR_SKIP);
+    protected function render($view, $data = []) {
+        // Extract data keys to variables for the views
+        extract($data);
+        
+        // Define page parameters if not set
+        $pageTitle = $data['title'] ?? 'Natal Solidário';
 
-        // Define $pageTitle se ainda não definido nos dados
-        if (!isset($pageTitle)) {
-            $pageTitle = $data['title'] ?? APP_NAME;
-        }
-
-        // Views que possuem layout próprio e não precisam do header/footer padrão
-        $isolatedViews = ['auth/login'];
-
-        $viewPath = __DIR__ . '/../views/' . $view . '.php';
-
-        if (!file_exists($viewPath)) {
-            http_response_code(500);
-            die("Erro interno: View '<strong>" . e($view) . "</strong>' não encontrada em <code>{$viewPath}</code>.");
-        }
-
+        // Check if template is isolated (like login page, which has its own design)
+        $isolatedViews = ['login'];
+        
         if (in_array($view, $isolatedViews)) {
-            // Layout isolado — apenas a view
-            include $viewPath;
+            $viewPath = __DIR__ . '/../views/' . $view . '.php';
+            if (file_exists($viewPath)) {
+                include $viewPath;
+            } else {
+                die("Erro: View '{$view}' não encontrada em: {$viewPath}");
+            }
         } else {
-            // Layout padrão
+            // Load standard layout with header, sidebar, footer
             include __DIR__ . '/../includes/header.php';
-            include $viewPath;
+            
+            $viewPath = __DIR__ . '/../views/' . $view . '.php';
+            if (file_exists($viewPath)) {
+                include $viewPath;
+            } else {
+                die("Erro: View '{$view}' não encontrada em: {$viewPath}");
+            }
+            
             include __DIR__ . '/../includes/footer.php';
         }
     }
 
-    // ─── Autenticação e Permissão ─────────────────────────────────────────
-
     /**
-     * Redireciona para login se não houver sessão ativa.
+     * Require authentication session
      */
-    protected function requireAuth(): void
-    {
+    protected function requireAuth() {
         if (!is_logged_in()) {
             redirect('login');
         }
     }
 
     /**
-     * Exige perfil específico; redireciona se não tiver permissão.
-     *
-     * @param string|string[] $roles
+     * Require specific roles ('admin' or 'turma')
      */
-    protected function requireRole($roles): void
-    {
+    protected function requireRole($roles) {
         $this->requireAuth();
         if (!has_role($roles)) {
-            $_SESSION['error'] = 'Acesso negado. Você não possui permissão para esta área.';
+            $_SESSION['error'] = "Acesso negado. Você não possui permissão para esta funcionalidade.";
             redirect('dashboard');
         }
     }
 
-    // ─── Segurança ────────────────────────────────────────────────────────
-
     /**
-     * Valida o token CSRF em requisições POST.
-     * Encerra com erro se o token for inválido.
+     * Helper to validate CSRF token on POST requests
      */
-    protected function validateCSRF(): void
-    {
+    protected function validateCSRF() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $token = $_POST['csrf_token'] ?? '';
             if (!verify_csrf_token($token)) {
-                http_response_code(419);
-                die("Erro de segurança: token CSRF inválido. <a href='" . url('dashboard') . "'>Voltar</a>");
+                die("Erro de segurança: Validação CSRF falhou.");
             }
         }
     }
 
-    // ─── Resposta JSON ────────────────────────────────────────────────────
-
     /**
-     * Envia uma resposta JSON e encerra.
+     * Helper to send JSON responses
      */
-    protected function json(array $data, int $status = 200): void
-    {
+    protected function json($data, $status = 200) {
         http_response_code($status);
-        header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        header('Content-Type: application/json');
+        echo json_encode($data);
         exit;
-    }
-
-    // ─── Redirecionamento ─────────────────────────────────────────────────
-
-    /**
-     * Redireciona para uma rota do sistema.
-     */
-    protected function redirect(string $route): void
-    {
-        redirect($route);
     }
 }

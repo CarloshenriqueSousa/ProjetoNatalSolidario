@@ -200,7 +200,9 @@ INSERT INTO `configuracoes_sistema` (`chave`, `valor`) VALUES
 ('pontos_alimento_kilo', '10'),
 ('pontos_roupas_lote', '15'),
 ('pontos_brinquedo_lote', '20'),
-('pontos_rifa_vendida', '5')
+('pontos_higiene_lote', '12'),
+('pontos_rifa_vendida', '5'),
+('penalidade_atraso', '50')
 ON DUPLICATE KEY UPDATE `valor` = VALUES(`valor`);
 
 -- Usuário Administrador Padrão (Senha: admin123)

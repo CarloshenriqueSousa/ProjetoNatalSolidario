@@ -39,13 +39,10 @@ class ProdutosController extends Controller {
         $user = Auth::user();
 
         $turmaId = (int)($_POST['turma_id'] ?? 0);
-        $categoria = $_POST['categoria'] ?? '';
-
-        // Bloqueio se coleta tentar cadastrar para outra turma
-        if ($user['perfil'] === 'coleta' && $turmaId !== $user['turma_id']) {
-            $_SESSION['error'] = 'Você só pode cadastrar produtos para a sua própria turma.';
-            $this->redirect('/produtos/novo');
+        if ($user['perfil'] === 'coleta') {
+            $turmaId = (int)$user['turma_id'];
         }
+        $categoria = $_POST['categoria'] ?? '';
 
         $dados = [
             'turma_id' => $turmaId,

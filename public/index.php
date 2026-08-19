@@ -23,6 +23,7 @@ $router->get('/logout', 'AuthController@logout');
 // Rotas do Dashboard
 $router->get('/', 'DashboardController@index');
 $router->get('/dashboard', 'DashboardController@index');
+$router->get('/api/dashboard', 'DashboardController@apiData');
 
 // Rotas de Rifas
 $router->get('/rifas', 'RifasController@index');
@@ -46,6 +47,8 @@ $router->get('/familias/entregar/{id}', 'FamiliasController@entregar');
 
 // Rotas de Relatórios
 $router->get('/relatorios', 'RelatoriosController@index');
+$router->get('/relatorios/export/estoque', 'RelatorioExportController@exportEstoque');
+$router->get('/relatorios/export/prestacao', 'RelatorioExportController@exportPrestacao');
 
 // Dispatch
 $router->dispatch();
