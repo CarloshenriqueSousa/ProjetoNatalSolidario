@@ -45,50 +45,8 @@ class Financeiro {
     }
 
     public static function getRankingTurmas(): array {
-        $db = Database::getInstance();
-        $configs = self::getConfiguracoes();
-
-        $pesoAlimento = (int)($configs['pontos_alimento_kilo'] ?? 10);
-        $pesoRoupa = (int)($configs['pontos_roupas_lote'] ?? 15);
-        $pesoBrinquedo = (int)($configs['pontos_brinquedo_lote'] ?? 20);
-        $pesoRifa = (int)($configs['pontos_rifa_vendida'] ?? 5);
-
-        // Query SQL consolidada por turma usando GROUP BY e agregadores SUM
-        $sql = "
-            SELECT 
-                t.id AS turma_id,
-                t.nome AS turma_nome,
-                COALESCE(SUM(pa.quantidade), 0) AS total_alimentos,
-                COALESCE(SUM(pr.quantidade), 0) AS total_roupas,
-                COALESCE(SUM(pb.quantidade), 0) AS total_brinquedos,
-                COALESCE(SUM(prif.quantidade_vendida), 0) AS total_rifas_vendidas,
-                (
-                    (COALESCE(SUM(pa.quantidade), 0) * :peso_ali) +
-                    (COALESCE(SUM(pr.quantidade), 0) * :peso_roup) +
-                    (COALESCE(SUM(pb.quantidade), 0) * :peso_brinq) +
-                    (COALESCE(SUM(prif.quantidade_vendida), 0) * :peso_rifa)
-                ) AS pontuacao_total
-            FROM turmas t
-            LEFT JOIN lotes_produtos lp ON lp.turma_id = t.id
-            LEFT JOIN produtos_alimentos pa ON pa.lote_id = lp.id
-            LEFT JOIN produtos_roupas pr ON pr.lote_id = lp.id
-            LEFT JOIN produtos_brinquedos pb ON pb.lote_id = lp.id
-            LEFT JOIN lotes_rifas lr ON lr.turma_id = t.id
-            LEFT JOIN prestacao_rifas prif ON prif.lote_rifa_id = lr.id
-            WHERE t.ativo = 1
-            GROUP BY t.id, t.nome
-            ORDER BY pontuacao_total DESC
-        ";
-
-        $stmt = $db->prepare($sql);
-        $stmt->execute([
-            ':peso_ali' => $pesoAlimento,
-            ':peso_roup' => $pesoRoupa,
-            ':peso_brinq' => $pesoBrinquedo,
-            ':peso_rifa' => $pesoRifa
-        ]);
-
-        return $stmt->fetchAll();
+        require_once __DIR__ . '/Pontuacao.php';
+        return Pontuacao::getRankingCompleto();
     }
 
     public static function getMovimentacoes(): array {

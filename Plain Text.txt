@@ -1,0 +1,444 @@
+
+
+
+
+
+
+
+Organização do Projeto O Sistema de Gerenciamento do Natal Solidário será desenvolvido por todos os integrantes do grupo. Após a divisão das funções, cada integrante ficará responsável por sua parte, sempre mantendo alinhamento com os demais. Este documento será utilizado para organizar ideias, registrar conclusões, definir ações e acompanhar o desenvolvimento do projeto. Organização por Cores Cada integrante deverá utilizar uma cor definida para sua função, facilitando a identificação das contribuições. Exemplo: Branco será utilizado para assuntos oficiais e gerais, enquanto o vermelho claro será utilizado por Lorenzo, violeta para Carlos. Sistema Base O projeto será desenvolvido a partir do sistema criado por Thiago e PH no ano passado. A versão existente servirá como base para as novas funcionalidades e melhorias. GitHub Todas as atualizações serão realizadas pelo GitHub. As alterações deverão ser avaliadas pelo grupo antes de serem oficialmente incorporadas ao projeto original. Fluxo: Desenvolvimento → GitHub → Avaliação → Aprovação → Projeto Oficial.  Equipe: Brenno, Carlos, Lorenzo, Pedro Henrique, Euclaudio, Thiago, Isaque Samuel  aba Login e recuperar senha: Euclaudio Banco de Dados: Carlos usuarios: PH Lorenzo rifas : Brenno estoques: Samuel financeiro: Thiago familias: Lorenzo Patrocinio: Euclaudio
+admin-Turmas
+Estoque
+Financeiro
+Família
+Patrocinio
+Rifas
+Turmas
+Acesso apenas aos produtos da própria turma.
+Não possuem acesso à pontuação.
+Não visualizam o ranking das turmas.
+
+Produtos da Turma
+Visualização dos produtos cadastrados pela turma.
+Informações disponíveis:
+Tipo de produto
+Lote
+Quantidade
+Qualidade
+Faixa etária ou categoria
+Validade
+Data de registro
+
+Pontuação
+Exclusiva para o administrador.
+Entrada de produtos
+ Dashboard de tudo
+ Saída/Entrada de produtos
+ Quantidade disponível (consulta de estoque da turma | E por turma/escola toda pelo ADMIN)
+ Controle por lote
+ Produtos próximos do vencimento (Verificar datas mínimas exigidas pelo edital)
+ Produtos vencidos (caso queira verificar o que entrou e o que realmente ficou )
+ Histórico de movimentações
+ Consulta de estoque
+ Exportar Relatórios para PDF ou outros tipos
+Admin Usuarios
+A aba Família será utilizada para organizar o processo de entrega das cestas durante o evento. Cada família deverá possuir um cadastro próprio, permitindo o controle das famílias que receberão as cestas.
+ Cadastro da família
+ Responsável pela coleta da cesta
+ Integrantes da família
+ Filhos e dependentes
+ Registro da entrega
+ Histórico de entregas
+Passo a Passo
+ O Liceu entra em contato com a escola e define a quantidade de cestas que será destinada a ela.
+ A escola selecionada realiza o cadastro das famílias que receberão as cestas.
+ O sistema registra as famílias e seus integrantes.
+ Com o levantamento finalizado, as cestas são separadas de acordo com as famílias cadastradas.
+ Durante o evento, é registrado o recebimento da cesta pelo responsável.
+
+Configurações — Administrador
+O administrador poderá editar praticamente todas as regras do sistema:
+ Valor da rifa.
+ Quantidade padrão de rifas por turma. (e se foi dado mais quantidades e quantas)
+ Numeração inicial/final (não acho tão necessário apenas por verificação msm)
+ Prazo para devolução.
+ Prazo para pagamento.
+ Percentuais.
+ Metas. (caso haja alguma)
+ Pontuação (pontos da rifa, pontos de cada sala)
+ Regras de devolução.
+ Regras de prestação de contas.
+ Regras de atraso.
+ Lotes de rifas.
+A aba Financeiro será utilizada para controlar todas as entradas, saídas, patrocínios e recursos financeiros do Natal Solidário, permitindo acompanhar de forma organizada a movimentação do projeto.
+ Cadastro de patrocinadores
+ Tipo de patrocínio
+ Dinheiro
+ Cestas
+ Produtos
+ Outros
+ Registro de entradas
+ Registro de saídas
+ Descrição dos gastos
+ Valor dos gastos
+ Prestação de contas das rifas
+ Controle do valor arrecadado
+ Controle do valor utilizado
+Divisão dos Recursos
+O sistema terá uma divisão percentual personalizada dos recursos entre a turma e a escola. As porcentagens poderão ser alteradas conforme a necessidade do projeto.
+ Percentual destinado à turma
+ Percentual destinado à escola
+ Alteração das porcentagens
+ Cálculo automático dos valores
+ Registro de gastos adicionais
+ Controle do saldo final
+Gerenciamento de Produtos
+Admin
+Responsável de Coleta
+Cadastro de roupas
+ Cadastro por lote
+ Qualidade
+ Boa
+ruim
+ Faixa etária
+ Bebê(RN,PP, MM, GG)
+ Criança(PP, MM, GG)
+ Adolescente(P, M, G)
+ Adulto(P,M,G)
+Super-Admin
+O que fazer?
+Ranking
+ Exclusivo para o administrador. (apenas o diretor poderá ter acesso e editar tudo)
+ Ranking por turma.
+ Possibilidade de ordenar por:
+ Maior quantidade vendida
+ Maior valor arrecadado
+ Maior percentual de vendas
+ Maior pontuação
+ Melhor cumprimento dos prazos (caso isso seja realmente relevante)
+ Turmas não podem visualizar o ranking.
+O Responsável de Coleta será um aluno do 3º ano escolhido para auxiliar na organização do Natal Solidário. Cada responsável ficará encarregado de uma turma/sala durante o período de coleta, realizando a conferência, contagem e registro dos produtos entregues.
+O Administrador será uma única conta, pertencente ao diretor da escola. Ele terá acesso completo ao sistema e será responsável por acompanhar e controlar todas as informações do Natal Solidário. Podendo criar outros sub-admin, podendo editar o que cada conta terá acesso
+Dashboard
+ Total de produtos
+ Total de roupas
+ Total de brinquedos
+ Total de alimentos
+ Total de lotes
+ Estoque atual
+ Produtos próximos do vencimento
+ Ranking das turmas
+Agora que definimos as principais funções do Administrador e do Responsável de Coleta, podemos começar a pensar em como aplicar essas funcionalidades no sistema.
+A ideia é desenvolver o projeto por etapas, começando pela criação do ambiente do Administrador e, depois, adicionando dados reais para testar as funcionalidades.
+📊 Dashboard
+Tela principal com uma visão geral do evento, mostrando:
+ Total de produtos arrecadados
+ Produtos por categoria
+ Estoque
+ Turmas participantes
+ Ranking
+ Pontuação
+ Gráficos e indicadores
+🏫 Turmas
+O administrador poderá visualizar e gerenciar todas as turmas participantes, além de acompanhar os produtos arrecadados por cada uma.
+ Cadastrar/editar turmas
+ Visualizar produtos por turma
+ Vincular Aluno Administrador à turma
+ Acompanhar desempenho
+👤 Alunos Administradores
+O diretor poderá criar e gerenciar as contas dos alunos responsáveis pela coleta.
+ Criar conta
+ Editar conta
+ Ativar/desativar
+ Vincular a uma turma
+ Alterar responsável
+📦 Produtos e Estoque
+Permite controlar todos os produtos arrecadados durante o evento.
+ Produtos
+ Lotes
+ Entradas e saídas
+ Estoque geral
+ Estoque por turma
+ Validade
+ Histórico
+🏆 Pontuação e Ranking
+Área exclusiva do Administrador. O diretor poderá definir as regras, acompanhar a pontuação e visualizar o ranking das turmas.
+As turmas e os Alunos Administradores não terão acesso à pontuação ou ao ranking.
+📈 Gráficos
+Apresentação visual dos dados do evento, como:
+ Evolução das doações
+ Produtos por categoria
+ Arrecadação por turma
+ Evolução da pontuação
+ Estoque
+📄 Relatórios
+O administrador poderá gerar relatórios para acompanhamento e prestação de contas:
+ Estoque
+ Doações
+ Produtos
+ Turmas
+ Validade
+ Pontuação
+ Rifas
+🎟️ Rifas
+Controle geral das rifas entregues às turmas:
+ Entrega
+ Venda
+ Devolução
+ Pagamento
+ Pendências
+ Prestação de contas
+⚙️ Configurações
+O diretor poderá alterar as regras do evento sem precisar modificar o sistema, como:
+ Valor das rifas
+ Prazos
+ Metas
+ Pontuação
+ Categorias
+ Critérios da competição
+
+
+
+
+adicionar o usuario permitido a acessar o sistema
+🔐 Acesso
+ Possui uma conta própria.
+ Acesso somente à turma pela qual é responsável.
+ Não possui acesso a outras turmas.
+ Não visualiza pontuação ou ranking.
+📦 Durante a coleta
+O responsável ficará encarregado de conferir os produtos entregues pela turma e registrar no sistema:
+ Tipo de produto
+ Categoria
+ Quantidade
+ Lote
+ Qualidade, quando necessário
+ Faixa etária, quando necessário
+ Validade, quando necessário
+ Data do registro
+👀 Visualização
+Após registrar, poderá consultar os produtos já cadastrados daquela turma para conferência e correção de possíveis erros.
+🚫 Não possui acesso a
+ Pontuação
+ Ranking
+ Gráficos gerais
+ Relatórios
+ Dados de outras turmas
+ Configurações do sistema
+ Regras da competição
+Resumo: O Responsável de Coleta funciona como o ponto de controle da turma no dia da arrecadação, garantindo que tudo que foi entregue seja contado, conferido e registrado corretamente no sistema.
+Brinquedos
+ Cadastro por lote
+ Faixa etária
+ 0–4 anos
+5+
+Estrutura de Turmas e Informações
+Gerenciamento
+ Gerenciar produtos
+ Gerenciar lotes
+ Gerenciar estoque
+ Gerenciar turmas
+ Gerenciar pontuação
+Comidas
+ Cadastro por lote
+ Categoria
+ Não perecível
+ Perecível
+ Bebidas
+ Outros
+ Data de cadastro (feita pelo próprio sistema)
+ Data de validade
+ Qualidade
+Pontuação
+ Exclusiva para o administrador.
+ A pontuação deve ser totalmente configurável.
+ O administrador poderá definir pontos para:
+ Quantidade de rifas vendidas
+ Percentual de vendas
+ Devolução dentro do prazo (exemplo: caso atrasou perder uma certa pontuação)
+ Pagamento dentro do prazo(o certo é não haver atrasos mas, caso atrasou perder uma certa pontuação)
+ Cumprimento das metas (ele pode fazer algo do tipo: bateu uma meta estabelecida ganhar uma boa pontuação mas nada que perca pontos caso não alcance)
+ Permitir criar regras personalizadas.
+ Permitir ativar/desativar regras.
+ O administrador poderá alterar os critérios sem modificar o sistema.
+Antes de desenvolver o Dashboard, precisamos definir e criar a estrutura das turmas e das informações que serão utilizadas pelo sistema.
+Cada turma deverá possuir seus próprios dados e estar preparada para receber informações posteriormente, como:
+Produtos arrecadados
+Quantidades
+Lotes
+Doações
+Rifas
+Responsáveis
+Outros dados necessários
+Essa estrutura será importante porque várias partes do sistema dependerão das informações das turmas.
+Relatórios
+ Relatório de estoque
+ Relatório de doações
+ Relatório por turma
+ Relatório de produtos
+ Relatório de validade
+Higiene
+
+Aba de higiene (não contar com ela, pode ser utilizada ou não)
+por turma e a escola como um todo
+Pontuação
+Calculada com base em:
+Doações
+Categorias
+Quantidade
+valores dos pontos
+Não é exibida para as turmas.
+Pendências e Atrasos
+ Identificar automaticamente turmas com prestação de contas pendente.
+ Identificar rifas não devolvidas. (rifas entregues - rifas devolvidas) -- isso o diretor e quem vai receber as rifas poderá ver
+ Identificar pagamentos atrasados.
+ Permitir configurar o prazo máximo para prestação de contas.
+ Exibir alertas para o administrador. (tal sala está em pendência)
+ Manter histórico de pendências e regularizações.
+Usuários e Permissões
+Prestação de Contas
+Depois de definir a estrutura das turmas, será criada a parte de usuários e permissões.
+O sistema deverá diferenciar os tipos de acesso:
+Administrador
+Sub-Administrador
+Responsável de Coleta
+Cada usuário deverá possuir uma conta e ter acesso somente às funções permitidas para sua função.
+Os Responsáveis de Coleta também deverão estar vinculados a uma turma específica.
+Prestação de Contas
+Ao finalizar uma campanha, a turma deverá apresentar:
+ Total de rifas recebidas.
+ Total de rifas vendidas.
+ Total de rifas devolvidas.
+ Total de rifas pendentes. (caso alguém perca deverá pagar o valor das rifas perdidas)
+ Valor total esperado.
+ Valor total recebido.
+ Valor pendente.
+ Data da prestação de contas.
+ Responsável pela prestação. (quem foi prestar contas)
+Ambiente do Administrador
+Com a estrutura de turmas e usuários preparada, será criada a Home/Dashboard do Administrador.
+Nessa etapa, o objetivo é montar a interface e preparar os espaços onde futuramente serão apresentados os dados reais do sistema:
+Gráficos
+Indicadores
+Produtos arrecadados
+Estoque
+Ranking
+Pontuação
+Relatórios
+Inicialmente, poderão ser utilizados dados de teste apenas para desenvolver e validar a interface.
+O mais importante é que a estrutura seja criada de forma que, posteriormente, os dados reais cadastrados pelos outros módulos possam ser conectados ao Dashboard.
+Devolução de Rifas
+ Permitir devolução parcial ou total.
+ Registrar quantidade devolvida.
+ Registrar data da devolução. (definido a data no próprio sistema, fazer todos os cálculos de devolução)
+ Registrar responsável.
+ Rifas devolvidas não devem ser contabilizadas como vendidas. *IMPORTANTE*
+ Permitir observações sobre a devolução. (Registrar qualquer divergência encontrada, notificar tudo em um painel para administradores)
+Valores a Receber
+ O valor unitário da rifa deve ser totalmente editável pelo administrador.
+ O sistema deve calcular automaticamente o valor esperado. (para cada turma, inclusive os das rifas entregues a mais)
+ Fórmula padrão:
+Quantidade de rifas vendidas × Valor unitário = Valor a receber
+ Permitir configurar:
+ Valor da rifa
+ Percentual destinado à turma
+ Percentual destinado à organização
+ Prazo para pagamento
+ Valor mínimo de prestação de contas
+ Todos esses valores devem ser editáveis pelo administrador.
+Integração com os outros módulos
+Depois que a estrutura estiver pronta, vamos conectar a parte do Administrador às funcionalidades desenvolvidas pelos outros integrantes da equipe.
+Por exemplo:
+Produtos cadastrados → Dashboard → Gráficos e indicadores
+Turmas cadastradas → Dashboard → Comparação entre turmas
+Estoque → Dashboard → Quantidade disponível
+Pontuação → Dashboard → Ranking
+Dados do evento → Relatórios → Administrador
+Dessa forma, o Dashboard não será responsável por cadastrar novamente essas informações. Ele deverá receber e apresentar os dados que já existem no sistema.
+Recebimento das Rifas
+ A turma deve realizar a prestação de contas das rifas recebidas.
+ O sistema deve comparar automaticamente:
+ Rifas entregues
+ Rifas vendidas
+ Rifas devolvidas
+ Rifas pendentes
+ Valores arrecadados
+ Valores a receber
+ O responsável deverá informar a quantidade de rifas devolvidas.
+ Registrar os números/valores das rifas devolvidas.
+ Registrar a data da devolução.
+ Registrar quem realizou o recebimento. (o diretor atualiza essas pessoas para este cargo de recebedor no banco de dados)
+ Registrar quem realizou a devolução.
+ Permitir conferência das rifas devolvidas.
+ Após a conferência, registrar a prestação de contas como:
+ Aprovada
+ Pendente
+ Com divergência
+ Rejeitada
+Integração com os outros módulos
+Com os primeiros dados reais cadastrados, vamos utilizar as informações das turmas, produtos e demais módulos para desenvolver e testar:
+Gráficos
+Indicadores
+Relatórios
+Estoque
+Comparação entre turmas
+Dados de arrecadação
+Assim, conseguimos verificar se as informações cadastradas pelos diferentes módulos estão sendo corretamente utilizadas pelo ambiente do Administrador.
+Venda das Rifas
+ Registrar as rifas vendidas pela turma.
+ O valor da rifa deve ser configurável pelo administrador.
+ Permitir valores diferentes por campanha, lote ou período, caso necessário.
+ O sistema deve calcular automaticamente o valor total vendido.
+Controle das Rifas *esta parte está fixa e exata não deve ser mudada em nada, considerada a parte central de tudo*
+O sistema deverá realizar o controle das rifas por lotes entregues às turmas, não sendo necessário identificar ou acompanhar individualmente cada rifa ou aluno.
+Cada lote deverá possuir um status que permita acompanhar sua situação, como:
+Disponível — lote disponível para ser entregue.
+Entregue à turma — lote entregue ao líder da turma.
+Em andamento — turma está realizando as vendas.
+Aguardando prestação de contas — período de vendas encerrado ou data de prestação atingida.
+Prestação realizada — líder informou os resultados do lote.
+Com divergência — existem diferenças entre os valores ou quantidades informados e os valores esperados.
+Em atraso — a prestação de contas não foi realizada dentro da data estabelecida.
+Finalizado — prestação conferida e lote encerrado.
+Cancelado — lote cancelado pelo responsável.
+Para cada lote, o sistema deverá registrar:
+Turma responsável
+Líder responsável
+Quantidade de rifas entregues
+Valor unitário da rifa
+Data de entrega
+Data prevista para prestação de contas
+Quantidade de rifas vendidas
+Quantidade de rifas devolvidas
+Quantidade de rifas perdidas
+Valor que deveria ser entregue
+Valor efetivamente entregue
+Diferença entre o valor esperado e o valor entregue
+Data da prestação de contas
+Observações
+O sistema deverá realizar automaticamente os cálculos da prestação de contas com base nas informações registradas.
+Não será realizado controle individual por número de rifa ou por aluno. O controle será realizado de forma consolidada, considerando o lote entregue à turma e os resultados apresentados pelo líder na prestação de contas.
+Entrega de Rifas
+ Os administradores (diretor ativa quem serão as pessoas responsáveis para entregar e receber as rifas das turmas) realiza a entrega das rifas para a turma.
+ Cada entrega deve possuir:
+ Turma
+ Responsável pelo recebimento
+ Data da entrega
+ Quantidade de rifas
+ Valor unitário da rifa (isso não precisa ser em mais de uma aba, apenas o diretor poderá ver e alterar os valores, e o sistema deverá calcular tudo)
+ Valor total correspondente
+ Prazo para devolução/prestação de contas
+ Observações
+ Registrar o usuário responsável pela entrega.
+ Registrar data da entrega.
+ Gerar histórico de todas as entregas realizadas.
+ Permitir edição da entrega somente para usuários autorizados.
+ Alterações devem ficar registradas no histórico.
+ Permitir cancelamento/anulação de uma entrega, mantendo o registro no histórico.
+Turmas
+ Acesso apenas às rifas destinadas à própria turma.
+ Visualização das rifas recebidas e entregues pela turma.
+ Controle da quantidade de rifas recebidas.
+ Visualização dos valores ainda pendentes de recebimento.
+ Não possuem acesso aos dados financeiros de outras turmas.
+ Não visualizam o ranking geral das turmas.
+ Não possuem acesso à configuração de valores, regras ou pontuação.

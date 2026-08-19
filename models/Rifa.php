@@ -76,13 +76,13 @@ class Rifa {
         $qtdPerdida = (int)$dados['quantidade_perdida'];
         $valorEntregue = (float)$dados['valor_entregue'];
 
-        // 1. Validação de Quantidades
+        // 1. Verificação automática de divergência de quantidades
         $totalConferido = $qtdVendida + $qtdDevolvida + $qtdPerdida;
-        if ($totalConferido !== $qtdEntregue) {
-            return [
-                'success' => false,
-                'error' => "A soma das quantidades (Vendidas: {$qtdVendida} + Devolvidas: {$qtdDevolvida} + Perdidas: {$qtdPerdida} = {$totalConferido}) diverge da quantidade entregue ({$qtdEntregue})."
-            ];
+        $temDivergenciaQtd = ($totalConferido !== $qtdEntregue);
+
+        if ($temDivergenciaQtd) {
+            // Divergência encontrada — registrar mas NÃO bloquear
+            // O sistema marca automaticamente como 'com_divergencia'
         }
 
         // 2. Validação de Valores
@@ -90,11 +90,21 @@ class Rifa {
         $valorEsperadoTotal = $qtdEntregue * $valorUnitario;
         $diferenca = $valorEntregue - $valorCalculado;
 
-        // 3. Definição do Status
-        if ($diferenca == 0.00 && $qtdPerdida === 0) {
-            $novoStatus = 'prestacao_realizada';
-        } else {
+        // 3. Verificação automática de atraso na data
+        $temAtraso = false;
+        if (!empty($lote['data_prevista_prestacao'])) {
+            $dataPrevista = new DateTime($lote['data_prevista_prestacao']);
+            $hoje = new DateTime();
+            $temAtraso = ($hoje > $dataPrevista);
+        }
+
+        // 4. Definição automática do Status
+        if ($temDivergenciaQtd || abs($diferenca) > 0.01 || $qtdPerdida > 0) {
             $novoStatus = 'com_divergencia';
+        } elseif ($temAtraso) {
+            $novoStatus = 'em_atraso';
+        } else {
+            $novoStatus = 'prestacao_realizada';
         }
 
         // Início da Transação PDO
@@ -115,6 +125,17 @@ class Rifa {
                 usuario_recebimento_id = VALUES(usuario_recebimento_id),
                 observacoes = VALUES(observacoes)");
 
+            // Montar observações automáticas
+            $obsAuto = '';
+            if ($temDivergenciaQtd) {
+                $obsAuto .= "[DIVERGÊNCIA] Qtd conferida ({$totalConferido}) ≠ Qtd entregue ({$qtdEntregue}). ";
+            }
+            if ($temAtraso) {
+                $obsAuto .= "[ATRASO] Prestação após a data prevista ({$lote['data_prevista_prestacao']}). ";
+            }
+            $obsUsuario = htmlspecialchars($dados['observacoes'] ?? '', ENT_QUOTES, 'UTF-8');
+            $obsCompleta = trim($obsAuto . $obsUsuario);
+
             $stmt->execute([
                 ':lote_id' => $loteId,
                 ':q_vend' => $qtdVendida,
@@ -124,7 +145,7 @@ class Rifa {
                 ':v_ent' => $valorEntregue,
                 ':dif'   => $diferenca,
                 ':u_rec' => $usuarioRecebimentoId,
-                ':obs'   => htmlspecialchars($dados['observacoes'] ?? '', ENT_QUOTES, 'UTF-8')
+                ':obs'   => $obsCompleta
             ]);
 
             // Atualizar status do lote
@@ -151,7 +172,9 @@ class Rifa {
                 'success' => true,
                 'status' => $novoStatus,
                 'diferenca' => $diferenca,
-                'valor_calculado' => $valorCalculado
+                'valor_calculado' => $valorCalculado,
+                'tem_divergencia' => $temDivergenciaQtd,
+                'tem_atraso' => $temAtraso
             ];
 
         } catch (Exception $e) {
@@ -159,4 +182,57 @@ class Rifa {
             return ['success' => false, 'error' => 'Erro ao registrar prestação de contas: ' . $e->getMessage()];
         }
     }
+
+    /**
+     * Verifica e atualiza automaticamente lotes com data de prestação vencida para 'em_atraso'.
+     * Executado a cada acesso ao Dashboard ou lista de Rifas.
+     * Retorna a quantidade de lotes atualizados.
+     */
+    public static function verificarAtrasos(): int {
+        $db = Database::getInstance();
+
+        // Lotes que passaram da data prevista e ainda não foram finalizados/cancelados
+        $sql = "UPDATE lotes_rifas 
+                SET status = 'em_atraso' 
+                WHERE data_prevista_prestacao IS NOT NULL 
+                  AND data_prevista_prestacao < CURDATE()
+                  AND status NOT IN ('prestacao_realizada', 'com_divergencia', 'em_atraso', 'finalizado', 'cancelado')";
+
+        $stmt = $db->exec($sql);
+        return (int)$stmt;
+    }
+
+    /**
+     * Retorna o resumo de status de todos os lotes de rifas (para gráfico do Dashboard)
+     */
+    public static function getResumoStatus(): array {
+        $db = Database::getInstance();
+        $sql = "SELECT status, COUNT(*) AS total FROM lotes_rifas GROUP BY status ORDER BY total DESC";
+        return $db->query($sql)->fetchAll();
+    }
+
+    /**
+     * Retorna resumo de vendas por turma (vendidas vs devolvidas vs pendentes)
+     */
+    public static function getResumoVendasPorTurma(): array {
+        $db = Database::getInstance();
+        $sql = "
+            SELECT 
+                t.id AS turma_id,
+                t.nome AS turma_nome,
+                COALESCE(SUM(lr.quantidade_entregue), 0) AS total_entregue,
+                COALESCE(SUM(p.quantidade_vendida), 0) AS total_vendida,
+                COALESCE(SUM(p.quantidade_devolvida), 0) AS total_devolvida,
+                COALESCE(SUM(p.quantidade_perdida), 0) AS total_perdida,
+                COALESCE(SUM(p.valor_entregue), 0) AS valor_total_arrecadado
+            FROM turmas t
+            LEFT JOIN lotes_rifas lr ON lr.turma_id = t.id
+            LEFT JOIN prestacao_rifas p ON p.lote_rifa_id = lr.id
+            WHERE t.ativo = 1
+            GROUP BY t.id, t.nome
+            ORDER BY valor_total_arrecadado DESC
+        ";
+        return $db->query($sql)->fetchAll();
+    }
 }
+

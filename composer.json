@@ -7,11 +7,6 @@
         "dompdf/dompdf": "^3.0",
         "phpoffice/phpspreadsheet": "^2.1"
     },
-    "config": {
-        "platform": {
-            "php": "8.2.12"
-        }
-    },
     "autoload": {
         "classmap": [
             "config/",

@@ -8,6 +8,7 @@ class RifasController extends Controller {
 
     public function index(): void {
         Auth::requireLogin();
+        Rifa::verificarAtrasos();
         $perfil = Auth::getPerfil();
 
         if (in_array($perfil, ['admin', 'subadmin', 'coordenador'])) {

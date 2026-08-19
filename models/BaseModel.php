@@ -1,15 +1,11 @@
 <?php
 /**
- * BaseModel — Natal Solidário
- * Fornece acesso ao PDO via Database::getInstance().
- * Todos os Models que extendem esta classe recebem $this->db pronto.
+ * Base Model providing database access
  */
-abstract class BaseModel
-{
-    protected PDO $db;
+abstract class BaseModel {
+    protected $db;
 
-    public function __construct()
-    {
-        $this->db = Database::getInstance();
+    public function __construct() {
+        $this->db = Database::getConnection();
     }
 }

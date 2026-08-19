@@ -10,5 +10,6 @@
 <script src="/js/app.js"></script>
 <script src="/js/rifas.js"></script>
 <script src="/js/estoque.js"></script>
+<script src="/js/dashboard_charts.js"></script>
 </body>
 </html>
